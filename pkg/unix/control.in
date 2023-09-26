@@ -1,0 +1,8 @@
+Package: @PACKAGE@
+Version: @PACKAGE_VERSION@
+Architecture: @DEB_TARGET_ARCH@
+Maintainer: @PACKAGE_BUGREPORT@
+Section: net
+Priority: extra
+Homepage: https://filezilla-project.org/
+Description: A free open source FTP and FTPS Server.

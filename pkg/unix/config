@@ -1,0 +1,46 @@
+#!/bin/sh
+set -e
+
+must_configure=false
+
+if ! [ -e /usr/share/debconf/confmodule ]; then
+	exit 0
+fi
+
+. /usr/share/debconf/confmodule
+
+# Is it first time install?
+if [ "$1" = "configure" ] && [ -z "$2" ]; then
+	true
+# Or is it reconfiguring?
+elif [ "$1" = "reconfigure" ]; then
+	db_set filezilla-server/x-reconfiguring true
+else
+# If none of the above, just exit
+	exit 0
+fi
+	
+RET=false
+while [ "$RET" = "false" ]; do
+	db_input high filezilla-server/admin-password || true
+	db_go || true
+
+	db_get filezilla-server/admin-password
+	if [ -z "$RET" ]; then
+		if db_input high filezilla-server/no-admin-password-provided; then
+			db_go || true	
+			db_get filezilla-server/no-admin-password-provided
+		fi
+	fi
+done
+
+db_input medium filezilla-server/default-impersonator-user || true
+db_go || true
+
+db_get filezilla-server/default-impersonator-user
+if [ -n "$RET" ]; then
+	db_input medium filezilla-server/default-impersonator-group || true
+	db_go || true
+fi
+
+
