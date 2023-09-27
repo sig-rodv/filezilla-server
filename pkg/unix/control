@@ -1,0 +1,8 @@
+Package: filezilla-server
+Version: 1.7.3
+Architecture: amd64
+Maintainer: Tim Kosse <tim.kosse@filezilla-project.org>
+Section: net
+Priority: extra
+Homepage: https://filezilla-project.org/
+Description: A free open source FTP and FTPS Server.
