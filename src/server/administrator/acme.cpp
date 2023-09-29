@@ -108,14 +108,13 @@ auto administrator::operator()(administration::generate_acme_certificate &&v, ad
 
 			s->send(administration::generate_acme_certificate::success(reqid, std::move(info), info.load_extra()));
 		},
-		[this, id = session.get_id(), reqid = reqid] (std::string &&error) {
-			logger_.log_u(fz::logmsg::error, L"Error processing generate_acme_certificate: %s", error);
+		[this, id = session.get_id(), reqid = reqid] (const fz::securable_socket::cert_info &info) {
+   			 auto s = admin_server_.get_session(id);
+  			  if (!s)
+    		    return;
 
-			auto s = admin_server_.get_session(id);
-			if (!s)
-				return;
-
-			s->send(administration::generate_acme_certificate::failure(reqid, std::move(error)));
+   			 s->send(administration::generate_acme_certificate::success(reqid, info, info.load_extra()));
+}
 		}
 	);
 }
